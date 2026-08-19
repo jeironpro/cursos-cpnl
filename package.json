@@ -1,0 +1,39 @@
+{
+  "name": "cursos-cpnl",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Web estática con los materiales de los cursos de catalán (CPNL): niveles básico 1, 2 y 3.",
+  "scripts": {
+    "lint": "eslint src scripts --max-warnings=0 --no-error-on-unmatched-pattern",
+    "format": "prettier --write \"**/*.{js,mjs,cjs,html,css,json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{js,mjs,cjs,html,css,json,md,yml,yaml}\"",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "prepare": "husky"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{html,css}": [
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.8.1",
+    "globals": "^17.11.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.3.0",
+    "prettier": "^3.9.6",
+    "vitest": "^4.1.11"
+  }
+}
