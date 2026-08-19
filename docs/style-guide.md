@@ -24,17 +24,8 @@ referencian con `var(--token)` — nunca valores sueltos en el CSS.
 | `--color-muted`      | `oklch(45% 0.014 40)`   | Texto secundario, labels             |
 | `--color-rule`       | `oklch(87% 0.008 55)`   | Líneas de la retícula (hairlines)    |
 | `--color-accent`     | `oklch(50% 0.21 28)`    | Acento primario (vermell senyera)    |
-| `--color-accent-2`   | `oklch(80% 0.13 85)`    | Acento secundario (groc, uso < 1 %)  |
 | `--color-accent-ink` | `var(--color-paper)`    | Texto sobre el acento                |
 | `--color-focus`      | `var(--color-accent)`   | Anillo de foco (`:focus-visible`)    |
-
-Estados semánticos (uso puntual, no hay formularios en la web):
-
-| Token             | Valor (OKLCH)         | Uso                        |
-| ----------------- | --------------------- | -------------------------- |
-| `--color-error`   | `oklch(45% 0.19 25)`  | Errores (enlace roto, 404) |
-| `--color-success` | `oklch(55% 0.14 145)` | Éxito (descarga iniciada)  |
-| `--color-warning` | `oklch(70% 0.15 80)`  | Avisos                     |
 
 Reglas: sin `#000` ni `#fff` puros; el acento ocupa ≤ 3 % de la vista; el rojo
 se usa para el elemento "placa" del hero, el estado activo del sidebar y los
@@ -67,7 +58,6 @@ Escala 4pt por rol (definida en `tokens.css`):
 | `--space-xl`                 | 40 px     |
 | `--space-2xl`                | 64 px     |
 | `--space-3xl`                | 96 px     |
-| `--space-4xl`                | 144 px    |
 
 Grilla: retícula visible de 12 columnas (hairlines `--color-rule`) en el área
 principal, `--shell-max: 1280px`, gutter `clamp(16px, 2.5vw, 32px)`. El panel

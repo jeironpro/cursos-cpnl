@@ -12,6 +12,8 @@ const catalog = buildCatalog(INVENTORY);
 const DESKTOP_QUERY = "(min-width: 60rem)";
 const desktopMq = window.matchMedia(DESKTOP_QUERY);
 
+const SVG_NS = "http://www.w3.org/2000/svg";
+
 /**
  * Crea un elemento del DOM con atributos y, opcionalmente, texto.
  * @param {string} tagName
@@ -36,8 +38,6 @@ function createElement(tagName, attributes = {}, children = []) {
   return element;
 }
 
-const SVG_NS = "http://www.w3.org/2000/svg";
-
 /**
  * Aplica el estado de un acordeón (cabecera + panel + contenido interno).
  * Plegado: el contenido no debe ser enfocable ni anunciado.
@@ -60,6 +60,32 @@ function createIcon(name) {
   return svg;
 }
 
+/**
+ * Crea un acordeón (cabecera con chevron + panel plegable) que arranca
+ * cerrado. Devuelve los elementos para completar el contenido del panel.
+ */
+function createAccordion(className, labelNode, panelId) {
+  const accordion = createElement("button", {
+    class: className,
+    type: "button",
+    "aria-controls": panelId,
+  });
+  accordion.append(labelNode, createIcon("chevron-down"));
+
+  const panel = createElement("div", { class: "sidebar__panel", id: panelId });
+  const panelInner = createElement("div", { class: "sidebar__panel-inner" });
+  panel.append(panelInner);
+
+  accordion.addEventListener("click", () => {
+    const isExpanded = accordion.getAttribute("aria-expanded") === "true";
+    setAccordionState(accordion, panel, panelInner, !isExpanded);
+  });
+  // Todos los acordeones arrancan cerrados.
+  setAccordionState(accordion, panel, panelInner, false);
+
+  return { accordion, panel, panelInner };
+}
+
 /** Enlace de descarga (PDF) con icono. */
 function createDownloadLink(href, label, className) {
   const link = createElement("a", {
@@ -70,12 +96,34 @@ function createDownloadLink(href, label, className) {
   });
   link.append(createElement("span", { text: label }), createIcon("download"));
   return link;
-} /**
+}
+
+/** Elemento de lista con un enlace del panel que abre un recurso aparte. */
+function createSidebarItem(className, href, text) {
+  return createElement("li", {}, [
+    createElement("a", {
+      class: className,
+      href,
+      target: "_blank",
+      rel: "noopener",
+      text,
+    }),
+  ]);
+}
+
+/** Grupo de una ficha de datos (dt + dd). */
+function createSpecGroup(label, value) {
+  const group = createElement("div");
+  group.append(createElement("dt", { text: label }), createElement("dd", { text: String(value) }));
+  return group;
+}
+
+/**
  * Rellena el panel lateral con un menú acordeón: cada nivel es una cabecera
- * desplegable que contiene unidades → ejercicios y sus materiales. Todos los
- * niveles arrancan desplegados. Devuelve el mapa id → elemento (botón de
- * nivel o enlace de unidad) para el scrollspy, y el mapa unidad → nivel para
- * resaltar el nivel padre.
+ * desplegable que contiene unidades → ejercicios y sus materiales; cada unidad
+ * es a su vez un acordeón con sus ejercicios. Todos arrancan cerrados.
+ * Devuelve el mapa id → elemento (botón o enlace) para el scrollspy y el mapa
+ * unidad → nivel para resaltar el nivel padre.
  */
 function renderSidebar() {
   const sidebarLevels = document.getElementById("sidebar-levels");
@@ -84,114 +132,64 @@ function renderSidebar() {
 
   for (const level of catalog.levels) {
     const levelId = `basic-${level.number}`;
-    const panelId = `panel-${levelId}`;
     const levelItem = createElement("li", { class: "sidebar__level" });
 
-    const accordion = createElement("button", {
-      class: "sidebar__accordion",
-      type: "button",
-      "aria-expanded": "true",
-      "aria-controls": panelId,
-    });
-    accordion.append(
+    const levelAccordion = createAccordion(
+      "sidebar__accordion",
       createElement("span", {
         class: "sidebar__accordion-label",
         text: `${String(level.number).padStart(2, "0")} · ${level.label}`,
       }),
-      createIcon("chevron-down"),
+      `panel-${levelId}`,
     );
-    levelItem.append(accordion);
-    navLinks.set(levelId, accordion);
-
-    const panel = createElement("div", { class: "sidebar__panel", id: panelId });
-    const panelInner = createElement("div", { class: "sidebar__panel-inner" });
+    levelItem.append(levelAccordion.accordion);
+    navLinks.set(levelId, levelAccordion.accordion);
 
     const unitList = createElement("ul", { class: "sidebar__units" });
     for (const unit of level.units) {
       const unitId = `basic-${level.number}-unit-${unit.number}`;
-      const unitPanelId = `panel-${unitId}`;
-      const unitItem = createElement("li");
 
-      // Acordeón de unidad: pliega/despliega sus ejercicios.
-      const unitAccordion = createElement("button", {
-        class: "sidebar__unit-accordion",
-        type: "button",
-        "aria-expanded": "true",
-        "aria-controls": unitPanelId,
-      });
-      unitAccordion.append(
+      const unitAccordion = createAccordion(
+        "sidebar__unit-accordion",
         createElement("span", { text: `unitat ${unit.number}` }),
-        createIcon("chevron-down"),
+        `panel-${unitId}`,
       );
-      unitItem.append(unitAccordion);
-      navLinks.set(unitId, unitAccordion);
+      const unitItem = createElement("li");
+      unitItem.append(unitAccordion.accordion);
+      navLinks.set(unitId, unitAccordion.accordion);
       parentLevels.set(unitId, levelId);
-
-      const unitPanel = createElement("div", {
-        class: "sidebar__panel",
-        id: unitPanelId,
-      });
-      const unitPanelInner = createElement("div", { class: "sidebar__panel-inner" });
 
       if (unit.exercises.length > 0) {
         const exerciseList = createElement("ul", { class: "sidebar__exercises" });
         for (const exercise of unit.exercises) {
           exerciseList.append(
-            createElement("li", {}, [
-              createElement("a", {
-                class: "sidebar__exercise-link",
-                href: exercise.file,
-                target: "_blank",
-                rel: "noopener",
-                text: `exercici ${exercise.number}`,
-              }),
-            ]),
+            createSidebarItem(
+              "sidebar__exercise-link",
+              exercise.file,
+              `exercici ${exercise.number}`,
+            ),
           );
         }
-        unitPanelInner.append(exerciseList);
+        unitAccordion.panelInner.append(exerciseList);
       }
 
-      unitPanel.append(unitPanelInner);
-      unitItem.append(unitPanel);
+      unitItem.append(unitAccordion.panel);
       unitList.append(unitItem);
-
-      unitAccordion.addEventListener("click", () => {
-        const isExpanded = unitAccordion.getAttribute("aria-expanded") === "true";
-        setAccordionState(unitAccordion, unitPanel, unitPanelInner, !isExpanded);
-      });
-      // Todos los acordeones arrancan cerrados.
-      setAccordionState(unitAccordion, unitPanel, unitPanelInner, false);
     }
-    panelInner.append(unitList);
+    levelAccordion.panelInner.append(unitList);
 
     if (level.materials.length > 0) {
       const materialsList = createElement("ul", { class: "sidebar__materials" });
       for (const material of level.materials) {
         materialsList.append(
-          createElement("li", {}, [
-            createElement("a", {
-              class: "sidebar__material-link",
-              href: material.file,
-              target: "_blank",
-              rel: "noopener",
-              text: material.label,
-            }),
-          ]),
+          createSidebarItem("sidebar__material-link", material.file, material.label),
         );
       }
-      panelInner.append(materialsList);
+      levelAccordion.panelInner.append(materialsList);
     }
 
-    panel.append(panelInner);
-    levelItem.append(panel);
+    levelItem.append(levelAccordion.panel);
     sidebarLevels.append(levelItem);
-
-    accordion.addEventListener("click", () => {
-      const isExpanded = accordion.getAttribute("aria-expanded") === "true";
-      setAccordionState(accordion, panel, panelInner, !isExpanded);
-    });
-    // Todos los acordeones arrancan cerrados.
-    setAccordionState(accordion, panel, panelInner, false);
   }
 
   const totalFiles = INVENTORY.length;
@@ -214,12 +212,7 @@ function renderSummary() {
   ];
 
   for (const stat of stats) {
-    const group = createElement("div");
-    group.append(
-      createElement("dt", { text: stat.label }),
-      createElement("dd", { text: String(stat.value) }),
-    );
-    statsGrid.append(group);
+    statsGrid.append(createSpecGroup(stat.label, stat.value));
   }
 }
 
@@ -250,12 +243,7 @@ function renderLevels() {
 
     const spec = createElement("dl", { class: "level__spec" });
     for (const [label, value] of specItems) {
-      const group = createElement("div");
-      group.append(
-        createElement("dt", { text: label }),
-        createElement("dd", { text: String(value) }),
-      );
-      spec.append(group);
+      spec.append(createSpecGroup(label, value));
     }
     head.append(spec);
     section.append(head);
@@ -282,11 +270,11 @@ function renderLevels() {
 
         const exerciseList = createElement("ol", { class: "unit__exercises" });
         for (const exercise of unit.exercises) {
-          const item = createElement("li");
-          item.append(
-            createDownloadLink(exercise.file, exercise.label.toLowerCase(), "exercise-link"),
+          exerciseList.append(
+            createElement("li", {}, [
+              createDownloadLink(exercise.file, exercise.label.toLowerCase(), "exercise-link"),
+            ]),
           );
-          exerciseList.append(item);
         }
 
         article.append(unitHead, exerciseList);
