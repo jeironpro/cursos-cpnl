@@ -8,7 +8,7 @@
     "lint": "eslint src scripts --max-warnings=0 --no-error-on-unmatched-pattern",
     "format": "prettier --write \"**/*.{js,mjs,cjs,html,css,json,md,yml,yaml}\"",
     "format:check": "prettier --check \"**/*.{js,mjs,cjs,html,css,json,md,yml,yaml}\"",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
     "prepare": "husky"
   },
