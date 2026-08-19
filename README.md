@@ -45,6 +45,7 @@ cpnl/                      # Materiales PDF (llegan al remoto tal cual)
 ├── basic_2_b/             # Nivel bàsic 2
 └── basic_3_a/             # Nivel bàsic 3
 docs/style-guide.md        # Libro de estilo (dicresoft)
+icons/                     # Iconos SVG locales (download, menu, close, chevron)
 src/js/catalog.js          # Lógica pura del catálogo + lista de ficheros ocultos
 src/js/inventory.generated.js  # Inventario de PDFs (generado)
 src/js/app.js              # Render de la web y panel lateral

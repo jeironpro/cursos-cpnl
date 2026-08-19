@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800&family=IBM+Plex+Mono:wght@500&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800&family=IBM+Plex+Mono:wght@500&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="tokens.css" />
@@ -36,7 +36,9 @@
         aria-expanded="false"
         aria-controls="sidebar"
       >
-        <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+        <svg class="icon" aria-hidden="true">
+          <use href="icons/menu.svg#icon"></use>
+        </svg>
         <span class="visually-hidden">Obre la navegació</span>
       </button>
     </header>
@@ -52,7 +54,9 @@
               type="button"
               aria-label="Tanca la navegació"
             >
-              <span class="material-symbols-outlined" aria-hidden="true">close</span>
+              <svg class="icon" aria-hidden="true">
+                <use href="icons/close.svg#icon"></use>
+              </svg>
             </button>
           </div>
           <p class="sidebar__tagline">materials de català</p>
