@@ -36,13 +36,17 @@ function createElement(tagName, attributes = {}, children = []) {
   return element;
 }
 
-/** Icono Material Symbols reutilizable. */
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+/** Icono SVG local (icons/) reutilizable, coloreable con currentColor. */
 function createIcon(name) {
-  return createElement("span", {
-    class: "material-symbols-outlined",
-    "aria-hidden": "true",
-    text: name,
-  });
+  const svg = document.createElementNS(SVG_NS, "svg");
+  svg.setAttribute("class", "icon");
+  svg.setAttribute("aria-hidden", "true");
+  const use = document.createElementNS(SVG_NS, "use");
+  use.setAttribute("href", `icons/${name}.svg#icon`);
+  svg.append(use);
+  return svg;
 }
 
 /** Enlace de descarga (PDF) con icono. */
@@ -56,69 +60,113 @@ function createDownloadLink(href, label, className) {
   link.append(createElement("span", { text: label }), createIcon("download"));
   return link;
 } /**
- * Rellena el panel lateral con el árbol completo: niveles → unidades →
- * ejercicios, todos desplegados. Devuelve el mapa id → enlace para el
- * scrollspy (niveles y unidades; los ejercicios abren el PDF).
+ * Rellena el panel lateral con un menú acordeón: cada nivel es una cabecera
+ * desplegable que contiene unidades → ejercicios y sus materiales. Todos los
+ * niveles arrancan desplegados. Devuelve el mapa id → elemento (botón de
+ * nivel o enlace de unidad) para el scrollspy, y el mapa unidad → nivel para
+ * resaltar el nivel padre.
  */
 function renderSidebar() {
   const sidebarLevels = document.getElementById("sidebar-levels");
   const navLinks = new Map();
+  const parentLevels = new Map();
 
   for (const level of catalog.levels) {
     const levelId = `basic-${level.number}`;
-    const levelItem = createElement("li");
-    const levelLink = createElement("a", {
-      class: "sidebar__link",
-      href: `#${levelId}`,
-      text: `${String(level.number).padStart(2, "0")} · ${level.label}`,
+    const panelId = `panel-${levelId}`;
+    const levelItem = createElement("li", { class: "sidebar__level" });
+
+    const accordion = createElement("button", {
+      class: "sidebar__accordion",
+      type: "button",
+      "aria-expanded": "true",
+      "aria-controls": panelId,
     });
-    levelItem.append(levelLink);
-    navLinks.set(levelId, levelLink);
+    accordion.append(
+      createElement("span", {
+        class: "sidebar__accordion-label",
+        text: `${String(level.number).padStart(2, "0")} · ${level.label}`,
+      }),
+      createIcon("chevron-down"),
+    );
+    levelItem.append(accordion);
+    navLinks.set(levelId, accordion);
 
-    if (level.units.length > 0) {
-      const unitList = createElement("ul", { class: "sidebar__units" });
-      for (const unit of level.units) {
-        const unitId = `basic-${level.number}-unit-${unit.number}`;
-        const unitItem = createElement("li");
-        const unitLink = createElement("a", {
-          class: "sidebar__unit-link",
-          href: `#${unitId}`,
-          text: `unitat ${unit.number}`,
-        });
-        unitItem.append(unitLink);
-        navLinks.set(unitId, unitLink);
+    const panel = createElement("div", { class: "sidebar__panel", id: panelId });
+    const panelInner = createElement("div", { class: "sidebar__panel-inner" });
 
-        if (unit.exercises.length > 0) {
-          const exerciseList = createElement("ul", { class: "sidebar__exercises" });
-          for (const exercise of unit.exercises) {
-            exerciseList.append(
-              createElement("li", {}, [
-                createElement("a", {
-                  class: "sidebar__exercise-link",
-                  href: exercise.file,
-                  target: "_blank",
-                  rel: "noopener",
-                  text: `exercici ${exercise.number}`,
-                }),
-              ]),
-            );
-          }
-          unitItem.append(exerciseList);
+    const unitList = createElement("ul", { class: "sidebar__units" });
+    for (const unit of level.units) {
+      const unitId = `basic-${level.number}-unit-${unit.number}`;
+      const unitItem = createElement("li");
+      const unitLink = createElement("a", {
+        class: "sidebar__unit-link",
+        href: `#${unitId}`,
+        text: `unitat ${unit.number}`,
+      });
+      unitItem.append(unitLink);
+      navLinks.set(unitId, unitLink);
+      parentLevels.set(unitId, levelId);
+
+      if (unit.exercises.length > 0) {
+        const exerciseList = createElement("ul", { class: "sidebar__exercises" });
+        for (const exercise of unit.exercises) {
+          exerciseList.append(
+            createElement("li", {}, [
+              createElement("a", {
+                class: "sidebar__exercise-link",
+                href: exercise.file,
+                target: "_blank",
+                rel: "noopener",
+                text: `exercici ${exercise.number}`,
+              }),
+            ]),
+          );
         }
-
-        unitList.append(unitItem);
+        unitItem.append(exerciseList);
       }
-      levelItem.append(unitList);
+
+      unitList.append(unitItem);
+    }
+    panelInner.append(unitList);
+
+    if (level.materials.length > 0) {
+      const materialsList = createElement("ul", { class: "sidebar__materials" });
+      for (const material of level.materials) {
+        materialsList.append(
+          createElement("li", {}, [
+            createElement("a", {
+              class: "sidebar__material-link",
+              href: material.file,
+              target: "_blank",
+              rel: "noopener",
+              text: material.label,
+            }),
+          ]),
+        );
+      }
+      panelInner.append(materialsList);
     }
 
+    panel.append(panelInner);
+    levelItem.append(panel);
     sidebarLevels.append(levelItem);
+
+    accordion.addEventListener("click", () => {
+      const isExpanded = accordion.getAttribute("aria-expanded") === "true";
+      accordion.setAttribute("aria-expanded", String(!isExpanded));
+      panel.classList.toggle("is-collapsed", isExpanded);
+      // Plegado: el contenido no debe ser enfocable ni anunciado.
+      panelInner.inert = isExpanded;
+      panelInner.setAttribute("aria-hidden", String(isExpanded));
+    });
   }
 
   const totalFiles = INVENTORY.length;
   document.getElementById("sidebar-meta").textContent =
     `${catalog.totals.levels} nivells · ${totalFiles} fitxers`;
 
-  return navLinks;
+  return { navLinks, parentLevels };
 }
 
 /** Rellena el resumen del catálogo (placa y estadísticas). */
@@ -307,11 +355,11 @@ function initSidebarBehavior() {
  * cuya cabecera esté más arriba de la línea de referencia, y también el nivel
  * padre cuando una de sus unidades es la activa. Se recalcula por posición en
  * cada frame (no por IntersectionObserver) para no saltarse secciones en
- * scrolls rápidos.
+ * scrolls rápidos. La relación unidad → nivel es explícita (mapa), evitando
+ * colisiones de prefijo tipo unit-1 / unit-10.
  */
-function initScrollSpy(navLinks) {
+function initScrollSpy({ navLinks, parentLevels }) {
   const sections = [...document.querySelectorAll("#catalog section.level, #catalog article.unit")];
-  const allLinks = [...navLinks.values()];
   let ticking = false;
 
   function updateActive() {
@@ -329,8 +377,7 @@ function initScrollSpy(navLinks) {
 
     for (const [linkId, link] of navLinks) {
       const isSelf = linkId === currentId;
-      // Una unidad activa mantiene activo el enlace de su nivel.
-      const isParentOfActive = currentId !== null && currentId.startsWith(`${linkId}-unit`);
+      const isParentOfActive = currentId !== null && parentLevels.get(currentId) === linkId;
       link.classList.toggle("is-active", isSelf || isParentOfActive);
     }
   }
@@ -346,13 +393,10 @@ function initScrollSpy(navLinks) {
   window.addEventListener("resize", requestUpdate, { passive: true });
   window.addEventListener("load", requestUpdate);
   requestUpdate();
-
-  // Limpieza de referencias muertas (no hay teardown real en esta web).
-  return allLinks;
 }
 
-const navLinks = renderSidebar();
+const sidebar = renderSidebar();
 renderSummary();
 renderLevels();
 initSidebarBehavior();
-initScrollSpy(navLinks);
+initScrollSpy(sidebar);

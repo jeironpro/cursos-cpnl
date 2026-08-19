@@ -109,9 +109,13 @@ Breakpoints (mobile-first, en `rem`):
 
 ## 5. Iconografía
 
-- **Material Symbols** (Google), variante _outlined_, como única librería.
-- Uso mínimo: `menu` (hamburguesa), `download` (descargas), `close` (drawer).
-- **Prohibido**: emojis como iconos en la UI y en el código.
+- Iconos **SVG locales** en la carpeta `icons/` (`download.svg`, `menu.svg`,
+  `close.svg`, `chevron-down.svg`), referenciados con
+  `<svg class="icon"><use href="icons/X.svg#icon"></use></svg>`.
+- Trazos con `fill="currentColor"` para heredar el color del enlace (tinta en
+  reposo, acento en hover).
+- **Prohibido**: emojis como iconos en la UI y en el código; librerías de
+  iconos por CDN.
 
 ## 6. Accesibilidad y responsive
 
