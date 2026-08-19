@@ -18,26 +18,26 @@ const OUTPUT_FILE = "js/inventory.generated.js";
  * @returns {string[]}
  */
 function collectPdfs(dir) {
-  const entries = readdirSync(dir, { withFileTypes: true });
-  const files = [];
-  for (const entry of entries) {
-    const fullPath = join(dir, entry.name);
-    if (entry.isDirectory()) {
-      if (entry.name.startsWith("_")) continue;
-      files.push(...collectPdfs(fullPath));
-    } else if (entry.isFile() && entry.name.toLowerCase().endsWith(".pdf")) {
-      files.push(fullPath);
+    const entries = readdirSync(dir, { withFileTypes: true });
+    const files = [];
+    for (const entry of entries) {
+        const fullPath = join(dir, entry.name);
+        if (entry.isDirectory()) {
+            if (entry.name.startsWith("_")) continue;
+            files.push(...collectPdfs(fullPath));
+        } else if (entry.isFile() && entry.name.toLowerCase().endsWith(".pdf")) {
+            files.push(fullPath);
+        }
     }
-  }
-  return files;
+    return files;
 }
 
 const pdfs = collectPdfs(join(PROJECT_ROOT, SOURCE_DIR))
-  .map((filePath) => relative(PROJECT_ROOT, filePath).replaceAll("\\", "/"))
-  .sort();
+    .map((filePath) => relative(PROJECT_ROOT, filePath).replaceAll("\\", "/"))
+    .sort();
 
 const header = "// Generado por scripts/build-inventory.mjs — no editar a mano.\n";
-const body = `${header}// Lista de rutas de los PDF presentes en ${SOURCE_DIR}/.\nexport const INVENTORY = ${JSON.stringify(pdfs, null, 2)};\n`;
+const body = `${header}// Lista de rutas de los PDF presentes en ${SOURCE_DIR}/.\nexport const INVENTORY = ${JSON.stringify(pdfs, null, 4)};\n`;
 
 writeFileSync(join(PROJECT_ROOT, OUTPUT_FILE), body);
 console.log(`Inventario generado: ${pdfs.length} PDFs → ${OUTPUT_FILE}`);

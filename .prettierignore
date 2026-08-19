@@ -1,2 +1,3 @@
-# Fichero generado por scripts/build-inventory.mjs
+# Ficheros generados: se mantienen con la indentacion de su herramienta
 js/inventory.generated.js
+package-lock.json

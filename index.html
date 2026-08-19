@@ -1,105 +1,113 @@
 <!doctype html>
 <html lang="ca">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Materials de català — cursos CPNL</title>
-    <meta
-      name="description"
-      content="Materials d’aprenentatge de català per als nivells bàsic 1, 2 i 3: exercicis per unitats, quaderns i àudios."
-    />
-    <link rel="icon" type="image/svg+xml" href="icons/favicon.svg" />
-    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800&family=IBM+Plex+Mono:wght@500&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="css/tokens.css" />
-    <link rel="stylesheet" href="css/styles.css" />
-    <script type="module" src="js/app.js"></script>
-  </head>
-  <body>
-    <a class="skip-link" href="#main">Salta al contingut</a>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <title>Materials de català — cursos CPNL</title>
+        <meta
+            name="description"
+            content="Materials d’aprenentatge de català per als nivells bàsic 1, 2 i 3: exercicis per unitats, quaderns i àudios."
+        />
+        <link rel="icon" type="image/svg+xml" href="icons/favicon.svg" />
+        <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800&family=IBM+Plex+Mono:wght@500&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="css/tokens.css" />
+        <link rel="stylesheet" href="css/styles.css" />
+        <script type="module" src="js/app.js"></script>
+    </head>
+    <body>
+        <a class="skip-link" href="#main">Salta al contingut</a>
 
-    <div class="rails" aria-hidden="true"></div>
+        <div class="rails" aria-hidden="true"></div>
 
-    <header class="topbar">
-      <a class="topbar__brand" href="#top">
-        <img class="brand-logo" src="icons/favicon.svg" alt="" width="20" height="20" />
-        cursos cpnl
-      </a>
-      <button
-        class="sidebar-toggle"
-        id="sidebar-toggle"
-        type="button"
-        aria-expanded="false"
-        aria-controls="sidebar"
-      >
-        <svg class="icon" aria-hidden="true">
-          <use href="icons/menu.svg#icon"></use>
-        </svg>
-        <span class="visually-hidden">Obre la navegació</span>
-      </button>
-    </header>
-
-    <div class="layout">
-      <aside class="sidebar" id="sidebar" aria-label="Navegació dels nivells" inert>
-        <div class="sidebar__inner">
-          <div class="sidebar__head">
-            <a class="sidebar__brand" href="#top">
-              <img class="brand-logo" src="icons/favicon.svg" alt="" width="20" height="20" />
-              cursos cpnl
+        <header class="topbar">
+            <a class="topbar__brand" href="#top">
+                <img class="brand-logo" src="icons/favicon.svg" alt="" width="20" height="20" />
+                cursos cpnl
             </a>
             <button
-              class="sidebar__close"
-              id="sidebar-close"
-              type="button"
-              aria-label="Tanca la navegació"
+                class="sidebar-toggle"
+                id="sidebar-toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="sidebar"
             >
-              <svg class="icon" aria-hidden="true">
-                <use href="icons/close.svg#icon"></use>
-              </svg>
+                <svg class="icon" aria-hidden="true">
+                    <use href="icons/menu.svg#icon"></use>
+                </svg>
+                <span class="visually-hidden">Obre la navegació</span>
             </button>
-          </div>
-          <p class="sidebar__tagline">materials de català</p>
-          <nav class="sidebar__nav" aria-label="Nivells del curs">
-            <ul id="sidebar-levels"></ul>
-          </nav>
-          <p class="sidebar__meta" id="sidebar-meta"></p>
-        </div>
-      </aside>
-      <div class="scrim" id="scrim" hidden></div>
+        </header>
 
-      <div class="page">
-        <main id="main" class="shell">
-          <section class="hero" id="top">
-            <p class="hero__label">materials d’aprenentatge de català * nivells bàsic 1, 2 i 3</p>
-            <h1 class="hero__title">materials de català</h1>
-            <p class="hero__lede">
-              Els materials d’estudi del curs de català, organitzats per nivells i unitats:
-              exercicis, quaderns i àudios.
-            </p>
-            <div class="hero__plate">
-              <span class="hero__plate-number" id="plate-number">64</span>
-              <span class="hero__plate-label">exercicis al catàleg</span>
+        <div class="layout">
+            <aside class="sidebar" id="sidebar" aria-label="Navegació dels nivells" inert>
+                <div class="sidebar__inner">
+                    <div class="sidebar__head">
+                        <a class="sidebar__brand" href="#top">
+                            <img
+                                class="brand-logo"
+                                src="icons/favicon.svg"
+                                alt=""
+                                width="20"
+                                height="20"
+                            />
+                            cursos cpnl
+                        </a>
+                        <button
+                            class="sidebar__close"
+                            id="sidebar-close"
+                            type="button"
+                            aria-label="Tanca la navegació"
+                        >
+                            <svg class="icon" aria-hidden="true">
+                                <use href="icons/close.svg#icon"></use>
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="sidebar__tagline">materials de català</p>
+                    <nav class="sidebar__nav" aria-label="Nivells del curs">
+                        <ul id="sidebar-levels"></ul>
+                    </nav>
+                    <p class="sidebar__meta" id="sidebar-meta"></p>
+                </div>
+            </aside>
+            <div class="scrim" id="scrim" hidden></div>
+
+            <div class="page">
+                <main id="main" class="shell">
+                    <section class="hero" id="top">
+                        <p class="hero__label">
+                            materials d’aprenentatge de català * nivells bàsic 1, 2 i 3
+                        </p>
+                        <h1 class="hero__title">materials de català</h1>
+                        <p class="hero__lede">
+                            Els materials d’estudi del curs de català, organitzats per nivells i
+                            unitats: exercicis, quaderns i àudios.
+                        </p>
+                        <div class="hero__plate">
+                            <span class="hero__plate-number" id="plate-number">64</span>
+                            <span class="hero__plate-label">exercicis al catàleg</span>
+                        </div>
+                    </section>
+
+                    <section class="stats" aria-label="Resum del catàleg">
+                        <dl class="stats__grid" id="stats"></dl>
+                    </section>
+
+                    <div id="catalog"></div>
+                </main>
+
+                <footer class="colophon">
+                    <p>cursos cpnl — materials d’aprenentatge de català · 2026.</p>
+                </footer>
             </div>
-          </section>
-
-          <section class="stats" aria-label="Resum del catàleg">
-            <dl class="stats__grid" id="stats"></dl>
-          </section>
-
-          <div id="catalog"></div>
-        </main>
-
-        <footer class="colophon">
-          <p>cursos cpnl — materials d’aprenentatge de català · 2026.</p>
-        </footer>
-      </div>
-    </div>
-  </body>
+        </div>
+    </body>
 </html>
