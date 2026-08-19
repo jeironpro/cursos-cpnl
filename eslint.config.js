@@ -8,11 +8,11 @@ import globals from "globals";
  */
 export default [
   {
-    ignores: ["node_modules/", "src/js/inventory.generated.js"],
+    ignores: ["node_modules/", "js/inventory.generated.js"],
   },
   js.configs.recommended,
   {
-    files: ["src/**/*.js"],
+    files: ["js/**/*.js"],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "module",
@@ -28,7 +28,7 @@ export default [
     },
   },
   {
-    files: ["src/test/**/*.js"],
+    files: ["js/test/**/*.js"],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "module",
