@@ -98,13 +98,29 @@ p {
     margin-inline: auto;
     padding-inline: var(--gutter);
     background-clip: content-box;
-    background-image: repeating-linear-gradient(
-        to right,
-        var(--color-rule) 0,
-        var(--color-rule) 1px,
-        transparent 1px,
-        transparent calc(100% / 12)
-    );
+    background-image:
+        /* dos líneas verticales a la derecha, integradas en la retícula */
+        linear-gradient(
+            to right,
+            transparent calc(100% - var(--gutter) - var(--space-md) - 1px),
+            var(--color-rule) calc(100% - var(--gutter) - var(--space-md) - 1px),
+            var(--color-rule) calc(100% - var(--gutter) - var(--space-md)),
+            transparent calc(100% - var(--gutter) - var(--space-md))
+        ),
+        linear-gradient(
+            to right,
+            transparent calc(100% - var(--gutter) - 1px),
+            var(--color-rule) calc(100% - var(--gutter) - 1px),
+            var(--color-rule) calc(100% - var(--gutter)),
+            transparent calc(100% - var(--gutter))
+        ),
+        repeating-linear-gradient(
+            to right,
+            var(--color-rule) 0,
+            var(--color-rule) 1px,
+            transparent 1px,
+            transparent calc(100% / 12)
+        );
 }
 
 .topbar,
@@ -421,19 +437,6 @@ p {
 
 .shell {
     padding-inline: var(--gutter);
-}
-
-/* Dos líneas verticales decorativas a la derecha del contenido principal. */
-.shell::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: var(--space-md);
-    border-left: var(--rule-1) solid var(--color-rule);
-    border-right: var(--rule-1) solid var(--color-rule);
-    pointer-events: none;
 }
 
 .hero {
