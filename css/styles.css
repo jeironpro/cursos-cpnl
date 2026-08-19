@@ -423,19 +423,6 @@ p {
     padding-inline: var(--gutter);
 }
 
-/* Dos líneas verticales decorativas a la derecha del contenido principal. */
-.shell::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: var(--space-md);
-    border-left: var(--rule-1) solid var(--color-rule);
-    border-right: var(--rule-1) solid var(--color-rule);
-    pointer-events: none;
-}
-
 .hero {
     padding-block: var(--space-2xl) var(--space-xl);
 }
