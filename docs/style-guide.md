@@ -12,7 +12,7 @@ etiquetas (mono) y el acento.
 
 ## 1. Paleta de colores
 
-Todos los valores se definen como custom properties en `tokens.css` y se
+Todos los valores se definen como custom properties en `css/tokens.css` y se
 referencian con `var(--token)` — nunca valores sueltos en el CSS.
 
 | Token                | Valor (OKLCH)           | Uso previsto                         |
@@ -50,7 +50,7 @@ enlaces; el amarillo solo como marca puntual del nivel activo.
 
 ## 3. Espaciados y grilla
 
-Escala 4pt por rol (definida en `tokens.css`):
+Escala 4pt por rol (definida en `css/tokens.css`):
 
 | Token                        | Valor     |
 | ---------------------------- | --------- |

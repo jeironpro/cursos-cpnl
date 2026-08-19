@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { buildCatalog, HIDDEN_FILES, LEVELS } from "../js/catalog.js";
-import { INVENTORY } from "../js/inventory.generated.js";
+import { buildCatalog, HIDDEN_FILES, LEVELS } from "../catalog.js";
+import { INVENTORY } from "../inventory.generated.js";
 
 describe("buildCatalog", () => {
   it("agrupa los ficheros por nivel y por unidad", () => {

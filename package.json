@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Web estática con los materiales de los cursos de catalán (CPNL): niveles básico 1, 2 y 3.",
   "scripts": {
-    "lint": "eslint src scripts --max-warnings=0 --no-error-on-unmatched-pattern",
+    "lint": "eslint js scripts --max-warnings=0 --no-error-on-unmatched-pattern",
     "format": "prettier --write \"**/*.{js,mjs,cjs,html,css,json,md,yml,yaml}\"",
     "format:check": "prettier --check \"**/*.{js,mjs,cjs,html,css,json,md,yml,yaml}\"",
     "test": "vitest run --passWithNoTests",

@@ -8,10 +8,12 @@ import { join, relative } from "node:path";
  */
 const PROJECT_ROOT = process.cwd();
 const SOURCE_DIR = "cpnl";
-const OUTPUT_FILE = "src/js/inventory.generated.js";
+const OUTPUT_FILE = "js/inventory.generated.js";
 
 /**
  * Devuelve las rutas relativas de todos los PDF bajo un directorio.
+ * Los directorios cuyo nombre empieza por "_" (copias de seguridad,
+ * p. ej. _originals/) se ignoran: no forman parte del catálogo.
  * @param {string} dir Directorio a recorrer
  * @returns {string[]}
  */
@@ -21,6 +23,7 @@ function collectPdfs(dir) {
   for (const entry of entries) {
     const fullPath = join(dir, entry.name);
     if (entry.isDirectory()) {
+      if (entry.name.startsWith("_")) continue;
       files.push(...collectPdfs(fullPath));
     } else if (entry.isFile() && entry.name.toLowerCase().endsWith(".pdf")) {
       files.push(fullPath);
