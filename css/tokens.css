@@ -3,71 +3,71 @@
    referencian desde aquí mediante custom properties. No repetir valores sueltos. */
 
 :root {
-  /* ---------- Colores (OKLCH, acento de la senyera) ---------- */
-  --color-paper: oklch(98.5% 0.004 60);
-  --color-paper-2: oklch(96% 0.006 60);
-  --color-paper-3: oklch(93% 0.008 60);
-  --color-ink: oklch(18% 0.012 40);
-  --color-muted: oklch(45% 0.014 40);
-  --color-rule: oklch(87% 0.008 55);
-  --color-accent: oklch(50% 0.21 28);
-  --color-accent-ink: var(--color-paper);
-  --color-focus: var(--color-accent);
-  --color-scrim: oklch(18% 0.012 40 / 0.45);
+    /* ---------- Colores (OKLCH, acento de la senyera) ---------- */
+    --color-paper: oklch(98.5% 0.004 60);
+    --color-paper-2: oklch(96% 0.006 60);
+    --color-paper-3: oklch(93% 0.008 60);
+    --color-ink: oklch(18% 0.012 40);
+    --color-muted: oklch(45% 0.014 40);
+    --color-rule: oklch(87% 0.008 55);
+    --color-accent: oklch(50% 0.21 28);
+    --color-accent-ink: var(--color-paper);
+    --color-focus: var(--color-accent);
+    --color-scrim: oklch(18% 0.012 40 / 0.45);
 
-  /* ---------- Tipografía ---------- */
-  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --font-body: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --font-label: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
-  --display-weight: 800;
-  --tracking-display: -0.045em;
-  --tracking-label: 0.08em;
+    /* ---------- Tipografía ---------- */
+    --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --font-body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --font-label: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+    --display-weight: 800;
+    --tracking-display: -0.045em;
+    --tracking-label: 0.08em;
 
-  /* ---------- Escala de texto (ratio 1.25) ---------- */
-  --text-xs: 0.64rem;
-  --text-sm: 0.8rem;
-  --text-base: 1rem;
-  --text-md: 1.25rem;
-  --text-lg: 1.5625rem;
-  --text-2xl: 2.4414rem;
-  --text-3xl: 3.0518rem;
-  --text-4xl: 3.8147rem;
-  --text-display: clamp(2.75rem, 5vw + 1rem, 5.25rem);
+    /* ---------- Escala de texto (ratio 1.25) ---------- */
+    --text-xs: 0.64rem;
+    --text-sm: 0.8rem;
+    --text-base: 1rem;
+    --text-md: 1.25rem;
+    --text-lg: 1.5625rem;
+    --text-2xl: 2.4414rem;
+    --text-3xl: 3.0518rem;
+    --text-4xl: 3.8147rem;
+    --text-display: clamp(2.75rem, 5vw + 1rem, 5.25rem);
 
-  /* ---------- Espaciado (escala 4pt) ---------- */
-  --space-3xs: 0.125rem;
-  --space-2xs: 0.25rem;
-  --space-xs: 0.5rem;
-  --space-sm: 0.75rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2.5rem;
-  --space-2xl: 4rem;
-  --space-3xl: 6rem;
+    /* ---------- Espaciado (escala 4pt) ---------- */
+    --space-3xs: 0.125rem;
+    --space-2xs: 0.25rem;
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2.5rem;
+    --space-2xl: 4rem;
+    --space-3xl: 6rem;
 
-  /* ---------- Grilla y contenedores ---------- */
-  --gutter: clamp(1rem, 2.5vw, 2rem);
-  --shell-max: 1280px;
-  --sidebar-width: 15rem;
-  --sidebar-width-narrow: 16rem;
+    /* ---------- Grilla y contenedores ---------- */
+    --gutter: clamp(1rem, 2.5vw, 2rem);
+    --shell-max: 1280px;
+    --sidebar-width: 15rem;
+    --sidebar-width-narrow: 16rem;
 
-  /* ---------- Reglas y radios ---------- */
-  --rule-1: 1px;
-  --rule-2: 2px;
-  --radius-sm: 2px;
+    /* ---------- Reglas y radios ---------- */
+    --rule-1: 1px;
+    --rule-2: 2px;
+    --radius-sm: 2px;
 
-  /* ---------- Movimiento ---------- */
-  --dur-micro: 120ms;
-  --dur-short: 220ms;
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    /* ---------- Movimiento ---------- */
+    --dur-micro: 120ms;
+    --dur-short: 220ms;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 
-  /* ---------- Z-index (seis niveles) ---------- */
-  --z-base: 1;
-  --z-raised: 10;
-  --z-dropdown: 100;
-  --z-sticky: 200;
-  --z-modal: 400;
-  --z-tooltip: 600;
+    /* ---------- Z-index (seis niveles) ---------- */
+    --z-base: 1;
+    --z-raised: 10;
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-modal: 400;
+    --z-tooltip: 600;
 }

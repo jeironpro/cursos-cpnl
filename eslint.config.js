@@ -7,32 +7,32 @@ import globals from "globals";
  * (navegador para src/, node para scripts/ y la propia configuración).
  */
 export default [
-  {
-    ignores: ["node_modules/", "js/inventory.generated.js"],
-  },
-  js.configs.recommended,
-  {
-    files: ["js/**/*.js"],
-    languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: "module",
-      globals: globals.browser,
+    {
+        ignores: ["node_modules/", "js/inventory.generated.js"],
     },
-  },
-  {
-    files: ["scripts/**/*.{js,mjs}", "*.config.{js,mjs}"],
-    languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: "module",
-      globals: globals.node,
+    js.configs.recommended,
+    {
+        files: ["js/**/*.js"],
+        languageOptions: {
+            ecmaVersion: 2022,
+            sourceType: "module",
+            globals: globals.browser,
+        },
     },
-  },
-  {
-    files: ["js/test/**/*.js"],
-    languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: "module",
-      globals: { ...globals.node },
+    {
+        files: ["scripts/**/*.{js,mjs}", "*.config.{js,mjs}"],
+        languageOptions: {
+            ecmaVersion: 2022,
+            sourceType: "module",
+            globals: globals.node,
+        },
     },
-  },
+    {
+        files: ["js/test/**/*.js"],
+        languageOptions: {
+            ecmaVersion: 2022,
+            sourceType: "module",
+            globals: { ...globals.node },
+        },
+    },
 ];
