@@ -55,46 +55,70 @@ function createDownloadLink(href, label, className) {
   });
   link.append(createElement("span", { text: label }), createIcon("download"));
   return link;
-}
-
-/** Rellena la barra superior del panel lateral: niveles y unidades. */
+} /**
+ * Rellena el panel lateral con el árbol completo: niveles → unidades →
+ * ejercicios, todos desplegados. Devuelve el mapa id → enlace para el
+ * scrollspy (niveles y unidades; los ejercicios abren el PDF).
+ */
 function renderSidebar() {
   const sidebarLevels = document.getElementById("sidebar-levels");
-  const levelLinks = new Map();
+  const navLinks = new Map();
 
   for (const level of catalog.levels) {
     const levelId = `basic-${level.number}`;
-    const listItem = createElement("li");
+    const levelItem = createElement("li");
     const levelLink = createElement("a", {
       class: "sidebar__link",
       href: `#${levelId}`,
       text: `${String(level.number).padStart(2, "0")} · ${level.label}`,
     });
-    listItem.append(levelLink);
-    levelLinks.set(levelId, levelLink);
+    levelItem.append(levelLink);
+    navLinks.set(levelId, levelLink);
 
     if (level.units.length > 0) {
       const unitList = createElement("ul", { class: "sidebar__units" });
       for (const unit of level.units) {
         const unitId = `basic-${level.number}-unit-${unit.number}`;
+        const unitItem = createElement("li");
         const unitLink = createElement("a", {
+          class: "sidebar__unit-link",
           href: `#${unitId}`,
           text: `unitat ${unit.number}`,
         });
-        levelLinks.set(unitId, unitLink);
-        unitList.append(createElement("li", {}, [unitLink]));
+        unitItem.append(unitLink);
+        navLinks.set(unitId, unitLink);
+
+        if (unit.exercises.length > 0) {
+          const exerciseList = createElement("ul", { class: "sidebar__exercises" });
+          for (const exercise of unit.exercises) {
+            exerciseList.append(
+              createElement("li", {}, [
+                createElement("a", {
+                  class: "sidebar__exercise-link",
+                  href: exercise.file,
+                  target: "_blank",
+                  rel: "noopener",
+                  text: `exercici ${exercise.number}`,
+                }),
+              ]),
+            );
+          }
+          unitItem.append(exerciseList);
+        }
+
+        unitList.append(unitItem);
       }
-      listItem.append(unitList);
+      levelItem.append(unitList);
     }
 
-    sidebarLevels.append(listItem);
+    sidebarLevels.append(levelItem);
   }
 
   const totalFiles = INVENTORY.length;
   document.getElementById("sidebar-meta").textContent =
     `${catalog.totals.levels} nivells · ${totalFiles} fitxers`;
 
-  return levelLinks;
+  return navLinks;
 }
 
 /** Rellena el resumen del catálogo (placa y estadísticas). */
@@ -278,41 +302,57 @@ function initSidebarBehavior() {
   }
 }
 
-/** Resalta en el panel el nivel o la unidad visible en pantalla. */
-function initScrollSpy(levelLinks) {
-  const allLinks = [...levelLinks.values()];
+/**
+ * Sincroniza el scroll con el panel: marca como activo el nivel o la unidad
+ * cuya cabecera esté más arriba de la línea de referencia, y también el nivel
+ * padre cuando una de sus unidades es la activa. Se recalcula por posición en
+ * cada frame (no por IntersectionObserver) para no saltarse secciones en
+ * scrolls rápidos.
+ */
+function initScrollSpy(navLinks) {
+  const sections = [...document.querySelectorAll("#catalog section.level, #catalog article.unit")];
+  const allLinks = [...navLinks.values()];
+  let ticking = false;
 
-  function setActive(activeId) {
-    const activeLink = levelLinks.get(activeId);
-    for (const link of allLinks) {
-      link.classList.toggle("is-active", link === activeLink);
+  function updateActive() {
+    ticking = false;
+    const referenceLine = window.innerHeight * 0.35;
+    let currentId = null;
+
+    for (const section of sections) {
+      if (section.getBoundingClientRect().top <= referenceLine) {
+        currentId = section.id;
+      } else {
+        break;
+      }
+    }
+
+    for (const [linkId, link] of navLinks) {
+      const isSelf = linkId === currentId;
+      // Una unidad activa mantiene activo el enlace de su nivel.
+      const isParentOfActive = currentId !== null && currentId.startsWith(`${linkId}-unit`);
+      link.classList.toggle("is-active", isSelf || isParentOfActive);
     }
   }
 
-  const sectionIds = [
-    ...catalog.levels.flatMap((level) => [
-      `basic-${level.number}`,
-      ...level.units.map((unit) => `basic-${level.number}-unit-${unit.number}`),
-    ]),
-  ];
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) setActive(entry.target.id);
-      }
-    },
-    { rootMargin: "0px 0px -75% 0px", threshold: 0 },
-  );
-
-  for (const id of sectionIds) {
-    const section = document.getElementById(id);
-    if (section) observer.observe(section);
+  function requestUpdate() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(updateActive);
+    }
   }
+
+  window.addEventListener("scroll", requestUpdate, { passive: true });
+  window.addEventListener("resize", requestUpdate, { passive: true });
+  window.addEventListener("load", requestUpdate);
+  requestUpdate();
+
+  // Limpieza de referencias muertas (no hay teardown real en esta web).
+  return allLinks;
 }
 
-const levelLinks = renderSidebar();
+const navLinks = renderSidebar();
 renderSummary();
 renderLevels();
 initSidebarBehavior();
-initScrollSpy(levelLinks);
+initScrollSpy(navLinks);
