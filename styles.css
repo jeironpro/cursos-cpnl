@@ -301,27 +301,47 @@ p {
   padding-bottom: var(--space-sm);
 }
 
-.sidebar__unit-link {
-  display: block;
+.sidebar__unit-accordion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  width: 100%;
   padding-block: var(--space-xs);
-  padding-inline-start: var(--space-lg);
+  padding-inline: var(--space-lg) var(--space-sm);
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--color-muted);
+  cursor: pointer;
   font-family: var(--font-label);
   font-size: var(--text-sm);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  color: var(--color-muted);
   white-space: nowrap;
-  transition: color var(--dur-micro) var(--ease-out);
+  transition:
+    color var(--dur-micro) var(--ease-out),
+    background-color var(--dur-micro) var(--ease-out);
 }
 
-.sidebar__unit-link:hover {
+.sidebar__unit-accordion:hover {
   color: var(--color-ink);
 }
 
-.sidebar__unit-link.is-active {
+.sidebar__unit-accordion.is-active {
   color: var(--color-accent);
   background: var(--color-paper-3);
   box-shadow: inset var(--rule-2) 0 0 var(--color-accent);
+}
+
+.sidebar__unit-accordion .icon {
+  width: 1rem;
+  height: 1rem;
+  transition: transform var(--dur-short) var(--ease-out);
+}
+
+.sidebar__unit-accordion[aria-expanded="false"] .icon {
+  transform: rotate(-90deg);
 }
 
 .sidebar__exercises {

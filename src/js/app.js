@@ -38,6 +38,17 @@ function createElement(tagName, attributes = {}, children = []) {
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
+/**
+ * Aplica el estado de un acordeón (cabecera + panel + contenido interno).
+ * Plegado: el contenido no debe ser enfocable ni anunciado.
+ */
+function setAccordionState(button, panel, panelInner, expanded) {
+  button.setAttribute("aria-expanded", String(expanded));
+  panel.classList.toggle("is-collapsed", !expanded);
+  panelInner.inert = !expanded;
+  panelInner.setAttribute("aria-hidden", String(!expanded));
+}
+
 /** Icono SVG local (icons/) reutilizable, coloreable con currentColor. */
 function createIcon(name) {
   const svg = document.createElementNS(SVG_NS, "svg");
@@ -98,15 +109,29 @@ function renderSidebar() {
     const unitList = createElement("ul", { class: "sidebar__units" });
     for (const unit of level.units) {
       const unitId = `basic-${level.number}-unit-${unit.number}`;
+      const unitPanelId = `panel-${unitId}`;
       const unitItem = createElement("li");
-      const unitLink = createElement("a", {
-        class: "sidebar__unit-link",
-        href: `#${unitId}`,
-        text: `unitat ${unit.number}`,
+
+      // Acordeón de unidad: pliega/despliega sus ejercicios.
+      const unitAccordion = createElement("button", {
+        class: "sidebar__unit-accordion",
+        type: "button",
+        "aria-expanded": "true",
+        "aria-controls": unitPanelId,
       });
-      unitItem.append(unitLink);
-      navLinks.set(unitId, unitLink);
+      unitAccordion.append(
+        createElement("span", { text: `unitat ${unit.number}` }),
+        createIcon("chevron-down"),
+      );
+      unitItem.append(unitAccordion);
+      navLinks.set(unitId, unitAccordion);
       parentLevels.set(unitId, levelId);
+
+      const unitPanel = createElement("div", {
+        class: "sidebar__panel",
+        id: unitPanelId,
+      });
+      const unitPanelInner = createElement("div", { class: "sidebar__panel-inner" });
 
       if (unit.exercises.length > 0) {
         const exerciseList = createElement("ul", { class: "sidebar__exercises" });
@@ -123,10 +148,19 @@ function renderSidebar() {
             ]),
           );
         }
-        unitItem.append(exerciseList);
+        unitPanelInner.append(exerciseList);
       }
 
+      unitPanel.append(unitPanelInner);
+      unitItem.append(unitPanel);
       unitList.append(unitItem);
+
+      unitAccordion.addEventListener("click", () => {
+        const isExpanded = unitAccordion.getAttribute("aria-expanded") === "true";
+        setAccordionState(unitAccordion, unitPanel, unitPanelInner, !isExpanded);
+      });
+      // Todos los acordeones arrancan cerrados.
+      setAccordionState(unitAccordion, unitPanel, unitPanelInner, false);
     }
     panelInner.append(unitList);
 
@@ -154,12 +188,10 @@ function renderSidebar() {
 
     accordion.addEventListener("click", () => {
       const isExpanded = accordion.getAttribute("aria-expanded") === "true";
-      accordion.setAttribute("aria-expanded", String(!isExpanded));
-      panel.classList.toggle("is-collapsed", isExpanded);
-      // Plegado: el contenido no debe ser enfocable ni anunciado.
-      panelInner.inert = isExpanded;
-      panelInner.setAttribute("aria-hidden", String(isExpanded));
+      setAccordionState(accordion, panel, panelInner, !isExpanded);
     });
+    // Todos los acordeones arrancan cerrados.
+    setAccordionState(accordion, panel, panelInner, false);
   }
 
   const totalFiles = INVENTORY.length;
